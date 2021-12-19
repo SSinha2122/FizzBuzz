@@ -5,9 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-@AllArgsConstructor
 public class Constants {
-    AppConfig appConfig;
-
-    public static final String ACTIVATION_EMAIL = appConfig.getAppUrl()+"/api/auth/accountVerification";
+    public static final String ACTIVATION_EMAIL = "/api/auth/accountVerification";
 }

@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.Thoughts.io.FizzBuzz.config.AppConfig;
 import com.Thoughts.io.FizzBuzz.dto.RefreshTokenRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,6 +45,7 @@ public class AuthService {
 	private final JwtProvider jwtProvider;
 	private final MailService mailService;
 	private final VerificationTokenRepository verificationTokenRepository;
+	private final AppConfig appConfig;
 
 	@Transactional
 	public void signup(RegisterRequest registerRequest) {
@@ -57,9 +59,9 @@ public class AuthService {
 		userRepository.save(user);
 
 		String token = generateVerificationToken(user);
-		String message = 
+		String message =
 				"Thank you for signing up to FizzBuzz, please click on the below url to activate your account : "
-						+ ACTIVATION_EMAIL + "/" + token;
+						+appConfig.getAppUrl()+"/api/auth/accountVerification"+"/" + token;
 
 		mailService.sendMail(new NotificationEmail("Please Activate your account", user.getEmail(), message));
 	}
@@ -104,7 +106,7 @@ public class AuthService {
 				.username(loginRequest.getUsername())
 				.build();
 	}
-	
+
 	@Transactional(readOnly = true)
     User getCurrentUser() {
         org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
